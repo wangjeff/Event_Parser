@@ -188,6 +188,7 @@ namespace EventConverterConsole
                 object oSaveChanges = Microsoft.Office.Interop.Word.WdSaveOptions.wdSaveChanges;
                 object oformat = Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatDocument;//wdFormatDocument97為Word 97-2003 文件 (*.doc)
                 object start = 0, end = 0;
+				int table_num = 7;
 
                 path = OutputFilePath;
                 word_app.Visible = false;//不顯示word程式
@@ -195,7 +196,7 @@ namespace EventConverterConsole
                 word_document = word_app.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);//新增檔案
                 Microsoft.Office.Interop.Word.Range rng = word_document.Range(ref start, ref end);
 
-                Microsoft.Office.Interop.Word.Table table = word_document.Tables.Add(rng, 9 * TableCount, 2, ref oMissing, ref oMissing);//設定表格
+                Microsoft.Office.Interop.Word.Table table = word_document.Tables.Add(rng, table_num * TableCount, 2, ref oMissing, ref oMissing);//設定表格
                 table.Select();//選取指令
                 word_app.Selection.Font.Name = "Arial";//設定選取的資料字型
                 word_app.Selection.Font.Size = 10;//設定文字大小
@@ -203,11 +204,11 @@ namespace EventConverterConsole
                 word_app.Selection.Cells.VerticalAlignment = Microsoft.Office.Interop.Word.WdCellVerticalAlignment.wdCellAlignVerticalTop; //將其設為靠上面
 
                 //初始化表格
-                for (int i = 1; i <= 9 * TableCount; i++)
+                for (int i = 1; i <= table_num * TableCount; i++)
                 {
                     for (int j = 1; j <= 2; j++)
                     {
-                        if (i % 9 == 1)
+                        if (i % table_num == 1)
                         {
                             table.Cell(i, j).Range.Shading.BackgroundPatternColor = Microsoft.Office.Interop.Word.WdColor.wdColorGray20;  //color of first Row
                         }
@@ -215,9 +216,9 @@ namespace EventConverterConsole
                         table.Cell(i, j).Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
                     }
                     table.Rows[i].Height = 10f;
-                    if (i % 9 == 0)
+                    if (i % table_num == 0)
                     {
-                        Console.Write("\r" + (i/9).ToString() + " / " + TableCount);
+                        Console.Write("\r" + (i/table_num).ToString() + " / " + TableCount);
                     }
                 }
                 table.Columns[1].Width = 90f;
@@ -225,17 +226,17 @@ namespace EventConverterConsole
                 Console.WriteLine();
 
                 //填入文字
-                for (int i = 1; i <= 9 * TableCount; i++)//將表格的資料寫入word檔案裡,第一列的值為1,第一行的值為1
+                for (int i = 1; i <= table_num * TableCount; i++)//將表格的資料寫入word檔案裡,第一列的值為1,第一行的值為1
                 {
-                    if (i % 9 == 0)
+                    if (i % table_num == 0)
                     {
-                        Console.Write("\r" + (i / 9).ToString() + " / " + TableCount);
+                        Console.Write("\r" + (i / table_num).ToString() + " / " + TableCount);
                     }
                     for (int j = 1; j <= 2; j++)
                     {
                         if (j == 1)
                         {
-                            switch (i % 9)
+                            switch (i % table_num)
                             {
                                 case 1:
                                     table.Cell(i, j).Range.Text = "Event ID";
@@ -247,18 +248,12 @@ namespace EventConverterConsole
                                     table.Cell(i, j).Range.Text = "Category-Module";
                                     continue;
                                 case 4:
-                                    table.Cell(i, j).Range.Text = "Prefix Parameter";
-                                    continue;
-                                case 5:
                                     table.Cell(i, j).Range.Text = "Message";
                                     continue;
-                                case 6:
+                                case 5:
                                     table.Cell(i, j).Range.Text = "1st Line Message";
                                     continue;
-                                case 7:
-                                    table.Cell(i, j).Range.Text = "Old Message";
-                                    continue;
-                                case 8:
+                                case 6:
                                     table.Cell(i, j).Range.Text = "Cause";
                                     continue;
                                 case 0:
@@ -268,35 +263,29 @@ namespace EventConverterConsole
                         }
                         else
                         {
-                            switch (i % 9)
+                            switch (i % table_num)
                             {
                                 case 1:
-                                    string eventID = "#"+EventDataTable.Rows[i / 9][1].ToString();
-                                    table.Cell(i, j).Range.Hyperlinks.Add(table.Cell(i, j).Range, Address: eventID, TextToDisplay: EventDataTable.Rows[i / 9][1].ToString());
+                                    string eventID = "#"+EventDataTable.Rows[i / table_num][1].ToString();
+                                    table.Cell(i, j).Range.Hyperlinks.Add(table.Cell(i, j).Range, Address: eventID, TextToDisplay: EventDataTable.Rows[i / table_num][1].ToString());
                                     continue;
                                 case 2:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][2].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][2].ToString();
                                     continue;
                                 case 3:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][3].ToString() + " - " + EventDataTable.Rows[i / 9][4].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][3].ToString() + " - " + EventDataTable.Rows[i / table_num][4].ToString();
                                     continue;
                                 case 4:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][5].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][8].ToString();
                                     continue;
                                 case 5:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][8].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][11].ToString();
                                     continue;
                                 case 6:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][11].ToString();
-                                    continue;
-                                case 7:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][20].ToString();
-                                    continue;
-                                case 8:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][14].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][14].ToString();
                                     continue;
                                 case 0:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / 9 - 1)][22].ToString();
+                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][15].ToString();
                                     continue;
                             }
                         }
