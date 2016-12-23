@@ -271,7 +271,8 @@ namespace EventConverterConsole
                             switch (i % 9)
                             {
                                 case 1:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][1].ToString();
+                                    string eventID = "#"+EventDataTable.Rows[i / 9][1].ToString();
+                                    table.Cell(i, j).Range.Hyperlinks.Add(table.Cell(i, j).Range, Address: eventID, TextToDisplay: EventDataTable.Rows[i / 9][1].ToString());
                                     continue;
                                 case 2:
                                     table.Cell(i, j).Range.Text = EventDataTable.Rows[i / 9][2].ToString();
