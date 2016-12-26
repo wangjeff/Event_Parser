@@ -38,21 +38,21 @@ namespace EventConverterConsole
                 }
 
                 Console.WriteLine("Parsing ControllerEvent...");
-                cFileOperation.ReadExcelFile(EXEPath, "Controller Events", ref ControllerEventDataTable);    //讀取controller event
+                cFileOperation.ReadExcelFile(EXEPath, "Total events", ref ControllerEventDataTable);    //讀取controller event
                 cFileOperation.ExcelDataPreProcessing(ref ControllerEventDataTable, ref ProcessControllerEventDataTable);
                 Console.WriteLine("Parsing ControllerEvent complete");
 
-                Console.WriteLine("Parsing DataServiceEvent...");
-                cFileOperation.ReadExcelFile(EXEPath, "DataService Events", ref DataServiceEventDataTable);   ////讀取dataservice event
-                cFileOperation.ExcelDataPreProcessing(ref DataServiceEventDataTable, ref ProcessDataServiceEventDataTable);
-                Console.WriteLine("Parsing DataServiceEvent complete");
+                // Console.WriteLine("Parsing DataServiceEvent...");
+                // cFileOperation.ReadExcelFile(EXEPath, "DataService Events", ref DataServiceEventDataTable);   ////讀取dataservice event
+                // cFileOperation.ExcelDataPreProcessing(ref DataServiceEventDataTable, ref ProcessDataServiceEventDataTable);
+                // Console.WriteLine("Parsing DataServiceEvent complete");
 
-                Console.WriteLine("Merge and Sort Event...");
-                cFileOperation.MergeSortEventDataTable(ref MergeSortEventDataTable, ref ProcessControllerEventDataTable, ref ProcessDataServiceEventDataTable); //合併排序event
-                Console.WriteLine("Merge and Sort Event complete");
+                // Console.WriteLine("Merge and Sort Event...");
+                // cFileOperation.MergeSortEventDataTable(ref MergeSortEventDataTable, ref ProcessControllerEventDataTable, ref ProcessDataServiceEventDataTable); //合併排序event
+                // Console.WriteLine("Merge and Sort Event complete");
 
                 Console.WriteLine("Write Event to Word...");
-                cFileOperation.WriteWordFile(EventFileOUTPath, ref MergeSortEventDataTable);    //將 event寫入
+                cFileOperation.WriteWordFile(EventFileOUTPath, ref ProcessControllerEventDataTable);    //將 event寫入
                 //Console.WriteLine("Write Event to Word complete");
 
                 Console.Write("Press any key to continue");
