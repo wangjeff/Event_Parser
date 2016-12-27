@@ -19,6 +19,87 @@ namespace EventConverterConsole
         //5.IMEX=1 通知驅動程序始終將「互混」數據列作為文本讀取
         private const string IMEX = "0';";
 
+        static private void WriteDataTable(System.Data.DataTable table) 
+        {
+            if (table == null)
+               return;
+
+            foreach (DataColumn column in table.Columns) {
+               Console.Write("{0,-15}", column.ColumnName);
+            }
+            Console.WriteLine();
+
+            foreach (DataRow row in table.Rows) {
+               for (int i = 0; i < table.Columns.Count; i++)
+                  Console.Write("{0,-15}", row[i].ToString());
+               Console.WriteLine();
+            }
+
+            Console.WriteLine();
+        }
+
+        public void SortEventData(ref System.Data.DataTable SortDataTable, ref System.Data.DataTable ControllerDataTable)
+        {
+            try
+            {
+                System.Data.DataRow[] InformationDataRow;
+                System.Data.DataRow[] WarningDataRow;
+                System.Data.DataRow[] ErrorRow;
+                System.Data.DataRow[] CriticalErrorRow;
+                System.Data.DataTable MergeDataTable = new System.Data.DataTable();
+                System.Data.DataTable InformationDataTable = new System.Data.DataTable();
+                System.Data.DataTable WarningDataTable = new System.Data.DataTable();
+                System.Data.DataTable ErrorDataTable = new System.Data.DataTable();
+                System.Data.DataTable CriticalErrorDataTable = new System.Data.DataTable();
+
+                //Merge dataservice and controller event
+                MergeDataTable = ControllerDataTable.Copy();
+                //WriteDataTable(MergeDataTable);
+
+                //依序query sevirity完成排序
+                InformationDataRow = MergeDataTable.Select("Severity='Information'");
+                WarningDataRow = MergeDataTable.Select("Severity='Warning'");
+                ErrorRow = MergeDataTable.Select("Severity='Error'");
+                CriticalErrorRow = MergeDataTable.Select("Severity='Critical Error'");
+
+                InformationDataTable = MergeDataTable.Clone();
+                WarningDataTable = MergeDataTable.Clone();
+                ErrorDataTable = MergeDataTable.Clone();
+                CriticalErrorDataTable = MergeDataTable.Clone();
+
+                for (int i = 0; i < InformationDataRow.Length; i++)
+                {
+                    InformationDataTable.ImportRow(InformationDataRow[i]);
+                }
+
+                for (int i = 0; i < WarningDataRow.Length; i++)
+                {
+                    WarningDataTable.ImportRow(WarningDataRow[i]);
+                }
+
+                for (int i = 0; i < ErrorRow.Length; i++)
+                {
+                    ErrorDataTable.ImportRow(ErrorRow[i]);
+                }
+
+                for (int i = 0; i < CriticalErrorRow.Length; i++)
+                {
+                    CriticalErrorDataTable.ImportRow(CriticalErrorRow[i]);
+                }
+
+                SortDataTable = InformationDataTable.Copy();
+                SortDataTable.Merge(WarningDataTable, true);
+                SortDataTable.Merge(ErrorDataTable, true);
+                SortDataTable.Merge(CriticalErrorDataTable, true);
+
+                Console.WriteLine("total " + SortDataTable.Rows.Count.ToString() + " event");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("SortEventDataTable Exception" + e.Message);
+            }
+        }
+
         public void MergeSortEventDataTable(ref System.Data.DataTable MergeSortDataTable, ref System.Data.DataTable ControllerDataTable, ref System.Data.DataTable DataServiceDataTable)
         {
             try
@@ -118,7 +199,7 @@ namespace EventConverterConsole
                 OutEventDataTable = InEventDataTable.Copy();
 
                 //Assign Column name and handle colume that not valid
-                for (int i = 0; i < OutEventDataTable.Columns.Count; i++)
+                for (int i = 0; i <= OutEventDataTable.Columns.Count; i++)
                 {
                     //if colume name is blank, fill index to be colume name
                     if (OutEventDataTable.Rows[0][i].ToString() == "")
@@ -136,7 +217,7 @@ namespace EventConverterConsole
                     }
                 }
 
-                for (int i = 0; i < OutEventDataTable.Columns.Count; i++)
+                for (int i = 0; i <= OutEventDataTable.Columns.Count; i++)
                 {
                     OutEventDataTable.Columns[i].ColumnName = OutEventDataTable.Rows[0][i].ToString();
                 }

@@ -15,10 +15,8 @@ namespace EventConverterConsole
             {
                 FileOperation cFileOperation = new FileOperation();
                 DataTable ControllerEventDataTable = new DataTable();
-                DataTable DataServiceEventDataTable = new DataTable();
                 DataTable ProcessControllerEventDataTable = new DataTable();
-                DataTable ProcessDataServiceEventDataTable = new DataTable();
-                DataTable MergeSortEventDataTable = new DataTable();
+                DataTable SortEventDataTable = new DataTable();
                 string FileName = args[0];
                 //string FileName = "EventLogEnhancementRevised20160908.xls";
                 string OutPutEventFileName = "OutputEventWord.doc";
@@ -42,18 +40,12 @@ namespace EventConverterConsole
                 cFileOperation.ExcelDataPreProcessing(ref ControllerEventDataTable, ref ProcessControllerEventDataTable);
                 Console.WriteLine("Parsing ControllerEvent complete");
 
-                // Console.WriteLine("Parsing DataServiceEvent...");
-                // cFileOperation.ReadExcelFile(EXEPath, "DataService Events", ref DataServiceEventDataTable);   ////讀取dataservice event
-                // cFileOperation.ExcelDataPreProcessing(ref DataServiceEventDataTable, ref ProcessDataServiceEventDataTable);
-                // Console.WriteLine("Parsing DataServiceEvent complete");
-
-                // Console.WriteLine("Merge and Sort Event...");
-                // cFileOperation.MergeSortEventDataTable(ref MergeSortEventDataTable, ref ProcessControllerEventDataTable, ref ProcessDataServiceEventDataTable); //合併排序event
-                // Console.WriteLine("Merge and Sort Event complete");
+                 Console.WriteLine("Sort Event...");
+                 cFileOperation.SortEventData(ref SortEventDataTable, ref ProcessControllerEventDataTable); //合併排序event
+                 Console.WriteLine("Sort Event complete");
 
                 Console.WriteLine("Write Event to Word...");
-                cFileOperation.WriteWordFile(EventFileOUTPath, ref ProcessControllerEventDataTable);    //將 event寫入
-                //Console.WriteLine("Write Event to Word complete");
+                cFileOperation.WriteWordFile(EventFileOUTPath, ref SortEventDataTable);    //將 event寫入
 
                 Console.Write("Press any key to continue");
                 Console.ReadLine();
