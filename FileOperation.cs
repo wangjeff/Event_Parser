@@ -156,7 +156,7 @@ namespace EventConverterConsole
                 }
 
                 //delete first row as its event colume name
-                OutEventDataTable.Rows[0].Delete();
+                // OutEventDataTable.Rows[0].Delete();
                 OutEventDataTable.AcceptChanges();
 
                 Console.WriteLine("total " + OutEventDataTable.Rows.Count.ToString() + " event after preprocessing");
