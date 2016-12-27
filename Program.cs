@@ -15,7 +15,6 @@ namespace EventConverterConsole
             {
                 FileOperation cFileOperation = new FileOperation();
                 DataTable ControllerEventDataTable = new DataTable();
-                DataTable ProcessControllerEventDataTable = new DataTable();
                 DataTable SortEventDataTable = new DataTable();
                 string FileName = args[0];
                 //string FileName = "EventLogEnhancementRevised20160908.xls";
@@ -37,11 +36,10 @@ namespace EventConverterConsole
 
                 Console.WriteLine("Parsing ControllerEvent...");
                 cFileOperation.ReadExcelFile(EXEPath, "Total events", ref ControllerEventDataTable);    //讀取controller event
-                cFileOperation.ExcelDataPreProcessing(ref ControllerEventDataTable, ref ProcessControllerEventDataTable);
                 Console.WriteLine("Parsing ControllerEvent complete");
 
                  Console.WriteLine("Sort Event...");
-                 cFileOperation.SortEventData(ref SortEventDataTable, ref ProcessControllerEventDataTable); //合併排序event
+                 cFileOperation.SortEventData(ref SortEventDataTable, ref ControllerEventDataTable); //合併排序event
                  Console.WriteLine("Sort Event complete");
 
                 Console.WriteLine("Write Event to Word...");

@@ -100,67 +100,6 @@ namespace EventConverterConsole
             }
         }
 
-        public void MergeSortEventDataTable(ref System.Data.DataTable MergeSortDataTable, ref System.Data.DataTable ControllerDataTable, ref System.Data.DataTable DataServiceDataTable)
-        {
-            try
-            {
-                System.Data.DataRow[] InformationDataRow;
-                System.Data.DataRow[] WarningDataRow;
-                System.Data.DataRow[] ErrorRow;
-                System.Data.DataRow[] CriticalErrorRow;
-                System.Data.DataTable MergeDataTable = new System.Data.DataTable();
-                System.Data.DataTable InformationDataTable = new System.Data.DataTable();
-                System.Data.DataTable WarningDataTable = new System.Data.DataTable();
-                System.Data.DataTable ErrorDataTable = new System.Data.DataTable();
-                System.Data.DataTable CriticalErrorDataTable = new System.Data.DataTable();
-
-                //Merge dataservice and controller event
-                MergeDataTable = ControllerDataTable.Copy();
-                MergeDataTable.Merge(DataServiceDataTable, true);
-                
-                //依序query sevirity完成排序
-                InformationDataRow = MergeDataTable.Select("Severity='Information'");
-                WarningDataRow = MergeDataTable.Select("Severity='Warning'");
-                ErrorRow = MergeDataTable.Select("Severity='Error'");
-                CriticalErrorRow = MergeDataTable.Select("Severity='Critical Error'");
-
-                InformationDataTable = MergeDataTable.Clone();
-                WarningDataTable = MergeDataTable.Clone();
-                ErrorDataTable = MergeDataTable.Clone();
-                CriticalErrorDataTable = MergeDataTable.Clone();
-
-                for (int i = 0; i < InformationDataRow.Length; i++)
-                {
-                    InformationDataTable.ImportRow(InformationDataRow[i]);
-                }
-
-                for (int i = 0; i < WarningDataRow.Length; i++)
-                {
-                    WarningDataTable.ImportRow(WarningDataRow[i]);
-                }
-
-                for (int i = 0; i < ErrorRow.Length; i++)
-                {
-                    ErrorDataTable.ImportRow(ErrorRow[i]);
-                }
-
-                for (int i = 0; i < CriticalErrorRow.Length; i++)
-                {
-                    CriticalErrorDataTable.ImportRow(CriticalErrorRow[i]);
-                }
-
-                MergeSortDataTable = InformationDataTable.Copy();
-                MergeSortDataTable.Merge(WarningDataTable, true);
-                MergeSortDataTable.Merge(ErrorDataTable, true);
-                MergeSortDataTable.Merge(CriticalErrorDataTable, true);
-
-                Console.WriteLine("total " + MergeSortDataTable.Rows.Count.ToString() + " event");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("MergeSortEventDataTable" + e.Message);
-            }
-        }
 
         public void ReadExcelFile(string Filepath, string SheetName, ref System.Data.DataTable EventDataTable)
         {
@@ -371,7 +310,10 @@ namespace EventConverterConsole
                                     table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][5].ToString();
                                     continue;
                                 case 0:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][6].ToString();
+                                    if (EventDataTable.Rows[(i / table_num - 1)][6]==DBNull.Value)
+                                        table.Cell(i, j).Range.Text = "N/A";
+                                    else                                
+                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][6].ToString();
                                     continue;
                             }
                         }
