@@ -10,7 +10,8 @@ namespace EventConverterConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Event Parser v1.3 - made by Carlos - 2016/10/06");
+            Console.WriteLine("Event Parser v1.3 - made by Carlos        - 2016/10/06");
+            Console.WriteLine("Event Parser v2.1 - maintain by Jeff.Wang - 2016/12/27");
             try
             {
                 FileOperation cFileOperation = new FileOperation();

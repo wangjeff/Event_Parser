@@ -276,16 +276,28 @@ namespace EventConverterConsole
                                     table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][3].ToString() + " - " + EventDataTable.Rows[i / table_num][4].ToString();
                                     continue;
                                 case 4:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][8].ToString();
+								    if (EventDataTable.Rows[i / table_num][8]==DBNull.Value)
+										table.Cell(i, j).Range.Text = "N/A";
+									else									
+                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][8].ToString();
                                     continue;
                                 case 5:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][11].ToString();
+								    if (EventDataTable.Rows[i / table_num][11]==DBNull.Value)
+										table.Cell(i, j).Range.Text = "N/A";
+									else									
+                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][11].ToString();
                                     continue;
                                 case 6:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][14].ToString();
+								    if (EventDataTable.Rows[i / table_num][14]==DBNull.Value)
+										table.Cell(i, j).Range.Text = "N/A";
+									else								
+                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][14].ToString();
                                     continue;
                                 case 0:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][15].ToString();
+								    if (EventDataTable.Rows[(i / table_num - 1)][15]==DBNull.Value)
+										table.Cell(i, j).Range.Text = "N/A";
+									else
+                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][15].ToString();
                                     continue;
                             }
                         }
