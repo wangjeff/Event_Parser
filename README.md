@@ -2,12 +2,9 @@
 
 # 2016/12/28 v2.5 by Jeff.wang
 
-1.Improving the perforamce by remvoing some for loop
-2.blank data will fill in N/A
-
-
- Limit:
- 1. Need to fix the truncated problem by modify the execelfile
+1. Improving the perforamce by remvoing some for loop
+2. blank data will fill in N/A 
+3. (LIMIT)Need to fix the truncated problem by modify the execelfile
 
 # 2016/11/15 v1.5 by Jeff.wang
 1. Addint the Number Hyperlink
