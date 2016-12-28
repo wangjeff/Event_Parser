@@ -189,6 +189,8 @@ namespace EventConverterConsole
                 object oformat = Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatDocument;//wdFormatDocument97為Word 97-2003 文件 (*.doc)
                 object start = 0, end = 0;
 				int table_num = 7;
+                int col = 1;
+                int col2 =2;
 
                 path = OutputFilePath;
                 word_app.Visible = false;//不顯示word程式
@@ -200,26 +202,20 @@ namespace EventConverterConsole
                 table.Select();//選取指令
                 word_app.Selection.Font.Name = "Arial";//設定選取的資料字型
                 word_app.Selection.Font.Size = 10;//設定文字大小
+                rng.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
                 //word_app.Selection.Cells.VerticalAlignment = Microsoft.Office.Interop.Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter; //將其設為靠中間
                 word_app.Selection.Cells.VerticalAlignment = Microsoft.Office.Interop.Word.WdCellVerticalAlignment.wdCellAlignVerticalTop; //將其設為靠上面
 
                 //初始化表格
-                for (int i = 1; i <= table_num * TableCount; i++)
+                for (int i = 1; i <= table_num * TableCount; i = i + table_num)
                 {
-                    for (int j = 1; j <= 2; j++)
-                    {
-                        if (i % table_num == 1)
-                        {
-                            table.Cell(i, j).Range.Shading.BackgroundPatternColor = Microsoft.Office.Interop.Word.WdColor.wdColorGray20;  //color of first Row
-                        }
-                        //table.Cell(i, j).Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                        table.Cell(i, j).Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
-                    }
-                    table.Rows[i].Height = 10f;
-                    if (i % table_num == 0)
-                    {
-                        Console.Write("\r" + (i/table_num).ToString() + " / " + TableCount);
-                    }
+
+                    table.Cell(i, col).Range.Shading.BackgroundPatternColor = Microsoft.Office.Interop.Word.WdColor.wdColorGray20;  //color of first Row
+                    table.Cell(i, col2).Range.Shading.BackgroundPatternColor = Microsoft.Office.Interop.Word.WdColor.wdColorGray20; 
+                    Console.Write("\r" + ((i/table_num)+1).ToString() + " / " + TableCount);
+                    //table.Rows[i].Height = 10f;
+
+
                 }
                 table.Columns[1].Width = 90f;
                 table.Columns[2].Width = 340f;
@@ -232,76 +228,52 @@ namespace EventConverterConsole
                     {
                         Console.Write("\r" + (i / table_num).ToString() + " / " + TableCount);
                     }
-                    for (int j = 1; j <= 2; j++)
+                    switch (i % table_num)
                     {
-                        if (j == 1)
-                        {
-                            switch (i % table_num)
-                            {
-                                case 1:
-                                    table.Cell(i, j).Range.Text = "Event ID";
-                                    continue;
-                                case 2:
-                                    table.Cell(i, j).Range.Text = "Severity";
-                                    continue;
-                                case 3:
-                                    table.Cell(i, j).Range.Text = "Category-Module";
-                                    continue;
-                                case 4:
-                                    table.Cell(i, j).Range.Text = "Message";
-                                    continue;
-                                case 5:
-                                    table.Cell(i, j).Range.Text = "1st Line Message";
-                                    continue;
-                                case 6:
-                                    table.Cell(i, j).Range.Text = "Cause";
-                                    continue;
-                                case 0:
-                                    table.Cell(i, j).Range.Text = "Action";
-                                    continue;
-                            }
-                        }
-                        else
-                        {
-                            switch (i % table_num)
-                            {
-                                case 1:
-                                    string eventID = "#"+EventDataTable.Rows[i / table_num][1].ToString();
-                                    table.Cell(i, j).Range.Hyperlinks.Add(table.Cell(i, j).Range, Address: eventID, TextToDisplay: EventDataTable.Rows[i / table_num][1].ToString());
-                                    continue;
-                                case 2:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][2].ToString();
-                                    continue;
-                                case 3:
-                                    table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][3].ToString() + " - " + EventDataTable.Rows[i / table_num][4].ToString();
-                                    continue;
-                                case 4:
-								    if (EventDataTable.Rows[i / table_num][8]==DBNull.Value)
-										table.Cell(i, j).Range.Text = "N/A";
-									else									
-                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][8].ToString();
-                                    continue;
-                                case 5:
-								    if (EventDataTable.Rows[i / table_num][11]==DBNull.Value)
-										table.Cell(i, j).Range.Text = "N/A";
-									else									
-                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][11].ToString();
-                                    continue;
-                                case 6:
-								    if (EventDataTable.Rows[i / table_num][14]==DBNull.Value)
-										table.Cell(i, j).Range.Text = "N/A";
-									else								
-                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[i / table_num][14].ToString();
-                                    continue;
-                                case 0:
-								    if (EventDataTable.Rows[(i / table_num - 1)][15]==DBNull.Value)
-										table.Cell(i, j).Range.Text = "N/A";
-									else
-                                        table.Cell(i, j).Range.Text = EventDataTable.Rows[(i / table_num - 1)][15].ToString();
-                                    continue;
-                            }
-                        }
+                        case 1:
+                            table.Cell(i, col).Range.Text = "Event ID";
+                            string eventID = "#"+EventDataTable.Rows[i / table_num][1].ToString();
+                            table.Cell(i, col2).Range.Hyperlinks.Add(table.Cell(i, col2).Range, Address: eventID, TextToDisplay: EventDataTable.Rows[i / table_num][1].ToString());
+                            continue;
+                        case 2:
+                             table.Cell(i, col).Range.Text = "Severity";
+                            table.Cell(i, col2).Range.Text = EventDataTable.Rows[i / table_num][2].ToString();
+                            continue;
+                        case 3:
+                            table.Cell(i, col).Range.Text = "Category-Module";
+                            table.Cell(i, col2).Range.Text = EventDataTable.Rows[i / table_num][3].ToString() + " - " + EventDataTable.Rows[i / table_num][4].ToString();
+                            continue;
+                        case 4:
+                            table.Cell(i, col).Range.Text = "Message";
+							if (EventDataTable.Rows[i / table_num][8]==DBNull.Value)
+								table.Cell(i, col2).Range.Text = "N/A";
+							else									
+                                table.Cell(i, col2).Range.Text = EventDataTable.Rows[i / table_num][8].ToString();
+                            continue;
+                        case 5:
+                            table.Cell(i, col).Range.Text = "1st Line Message";
+							if (EventDataTable.Rows[i / table_num][11]==DBNull.Value)
+								table.Cell(i, col2).Range.Text = "N/A";
+							else									
+                                 table.Cell(i, col2).Range.Text = EventDataTable.Rows[i / table_num][11].ToString();
+                            continue;
+                        case 6:
+                            table.Cell(i, col).Range.Text = "Cause";
+							if (EventDataTable.Rows[i / table_num][14]==DBNull.Value)
+								table.Cell(i, col2).Range.Text = "N/A";
+							else								
+                                 table.Cell(i, col2).Range.Text = EventDataTable.Rows[i / table_num][14].ToString();
+                            continue;
+                        case 0:
+                            table.Cell(i, col).Range.Text = "Action";
+							if (EventDataTable.Rows[(i / table_num - 1)][15]==DBNull.Value)
+								table.Cell(i, col2).Range.Text = "N/A";
+							else
+                                table.Cell(i, col2).Range.Text = EventDataTable.Rows[(i / table_num - 1)][15].ToString();
+                            continue;
                     }
+
+                    
                 }
                 Console.WriteLine();
 
