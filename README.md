@@ -17,7 +17,7 @@
 # 2016/10/6 - v1.3 by Carlos
 1. support to use EventLogEnhancementRevised directly
 
-# 2016/9/11 - v1.2
+# 2016/9/11 - v1.2 by Carlos
 1. change font type = "arial"
 2. change font size = 10
 3. enlarge length of eventID colume from 85 to 90
