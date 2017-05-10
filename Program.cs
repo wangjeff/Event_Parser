@@ -10,7 +10,7 @@ namespace EventConverterConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Event Parser v1.3 - made by Carlos - 2016/10/06");
+            Console.WriteLine("GS Event Parser v1.5 - made by Jeff.Wang");
             try
             {
                 FileOperation cFileOperation = new FileOperation();
@@ -38,9 +38,9 @@ namespace EventConverterConsole
                 cFileOperation.ReadExcelFile(EXEPath, "Total events", ref ControllerEventDataTable);    //讀取controller event
                 Console.WriteLine("Parsing ControllerEvent complete");
 
-                 Console.WriteLine("Sort Event...");
-                 cFileOperation.SortEventData(ref SortEventDataTable, ref ControllerEventDataTable); //合併排序event
-                 Console.WriteLine("Sort Event complete");
+                Console.WriteLine("Sort Event...");
+                cFileOperation.SortEventData(ref SortEventDataTable, ref ControllerEventDataTable); //合併排序event
+                Console.WriteLine("Sort Event complete");
 
                 Console.WriteLine("Write Event to Word...");
                 cFileOperation.WriteWordFile(EventFileOUTPath, ref SortEventDataTable);    //將 event寫入
@@ -48,7 +48,7 @@ namespace EventConverterConsole
                 Console.Write("Press any key to continue");
                 Console.ReadLine();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("please type valid form - Ex. EventConverterConsole.exe TestSource.xlsx");
